@@ -1,5 +1,6 @@
-import { Collection, Document, OptionalId, InsertOneOptions, InsertOneResult, InsertManyResult, BulkWriteOptions } from "mongodb";
-declare class MongodbDriver {
+import { Collection } from "mongodb";
+import { AsyncDisposable } from "using-statement";
+declare class MongodbDriver implements AsyncDisposable {
     private id;
     private alive;
     private client;
@@ -11,12 +12,13 @@ declare class MongodbDriver {
     db(databaseName: string): MongodbDriver;
     openConnection(collectionName: string): Collection;
     get(collectionName: string): Collection;
-    insertOne(doc: OptionalId<Document>, options?: InsertOneOptions): Promise<InsertOneResult>;
-    insertMany(docs: OptionalId<Document>[], options?: BulkWriteOptions): Promise<InsertManyResult>;
+    access(): Collection;
+    col(): Collection;
     isAlive(): boolean;
     private checkAlive;
     close(): Promise<boolean>;
     private autoClose;
+    dispose(): Promise<void>;
 }
 export declare function mongoDbDriverFactory(url: string, alive?: boolean): Promise<MongodbDriver>;
 export {};

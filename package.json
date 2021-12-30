@@ -1,8 +1,9 @@
 {
   "name": "moosedb",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "Lightweight MongoDb driver.",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "start": "npm run build && node js/demo/main.js",
     "build": "date +\"%T\" && echo \"Cleaning...\" && rm -rf ./js && echo \"Compiling...\" && tsc && echo \"Done!\" && date +\"%T\"",
@@ -25,13 +26,9 @@
   },
   "homepage": "https://github.com/jellybeanci/moosedb#readme",
   "dependencies": {
-    "@jellybeanci/int": "^0.1.0",
     "mongodb": "^4.2.2",
     "undef-check": "^0.0.3",
+    "@jellybeanci/random": "^0.1.1",
     "using-statement": "^0.3.1"
-  },
-  "devDependencies": {
-    "@types/mongodb": "^4.0.7",
-    "moosedb": "^0.0.5"
   }
 }

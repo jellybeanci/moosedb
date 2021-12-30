@@ -3,8 +3,8 @@ import {
   Db,
   Collection
 } from "mongodb";
+import {randomInt} from "@jellybeanci/random";
 import {undefCheck} from "undef-check";
-import {int} from "@jellybeanci/int";
 import {AsyncDisposable} from "using-statement";
 
 class MongodbDriver implements AsyncDisposable {
@@ -25,7 +25,7 @@ class MongodbDriver implements AsyncDisposable {
     if (this.alive) return;
     await this.client.connect();
     this.alive = true;
-    this.id = `id:${int(Math.random() * 10_000)}`;
+    this.id = `id:${randomInt(10_000)}`;
   }
 
   public openDatabase(databaseName: string): MongodbDriver {
@@ -59,21 +59,21 @@ class MongodbDriver implements AsyncDisposable {
     return this.access();
   }
 
-  public isAlive() {
+  public isAlive(): boolean {
     return this.alive;
   }
 
-  private checkAlive() {
+  private checkAlive(): void {
     if (!this.isAlive()) throw Error("Connection is not alive. Connection dead or never initialized.");
   }
 
   public async close(): Promise<boolean> {
-    console.log("Exit called", this.id);
+    // console.log("Exit called", this.id);
     return await this.autoClose();
   }
 
   private async autoClose(): Promise<boolean> {
-    console.log("ID=", this.id);
+    // console.log("ID=", this.id);
     if (!this.isAlive()) return false;
     await this.client.close();
     return !(this.alive = false);
@@ -84,7 +84,7 @@ class MongodbDriver implements AsyncDisposable {
   }
 }
 
-export async function mongoDbDriverFactory(url: string, alive = true) {
+export async function mongoDbDriverFactory(url: string, alive = true): Promise<MongodbDriver> {
   const mongoDriver = new MongodbDriver(url);
   if (alive) await mongoDriver.initialize();
   return mongoDriver;
