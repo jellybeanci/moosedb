@@ -4,6 +4,7 @@
   "description": "Lightweight MongoDb driver.",
   "main": "index.js",
   "scripts": {
+    "start": "npm run build && node js/demo/main.js",
     "build": "date +\"%T\" && echo \"Cleaning...\" && rm -rf ./js && echo \"Compiling...\" && tsc && echo \"Done!\" && date +\"%T\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -29,6 +30,7 @@
     "undef-check": "^0.0.3"
   },
   "devDependencies": {
-    "@types/mongodb": "^4.0.7"
+    "@types/mongodb": "^4.0.7",
+    "moosedb": "^0.0.5"
   }
 }
