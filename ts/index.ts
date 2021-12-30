@@ -1,18 +1,15 @@
 import {
   MongoClient,
   Db,
-  Collection,
-  Document,
-  OptionalId,
-  InsertOneOptions,
-  InsertOneResult,
-  InsertManyResult,
-  BulkWriteOptions
+  Collection
 } from "mongodb";
 import {undefCheck} from "undef-check";
 import {int} from "@jellybeanci/int";
+import {AsyncDisposable} from "using-statement";
 
-class MongodbDriver {
+class MongodbDriver implements AsyncDisposable {
+  // TODO create documentation
+
   private id: string;
   private alive: boolean = false;
   private client: MongoClient;
@@ -53,18 +50,13 @@ class MongodbDriver {
     return this.openConnection(collectionName);
   }
 
-  public async insertOne(doc: OptionalId<Document>, options?: InsertOneOptions): Promise<InsertOneResult> {
+  public access(): Collection {
     this.checkAlive();
-    undefCheck(doc, "Object undefined.");
-    if (Array.isArray(doc)) throw Error("Can't use Arrays on insertOne method.");
-    return await this.collection.insertOne(doc, options);
+    return this.collection;
   }
 
-  public async insertMany(docs: OptionalId<Document>[], options?: BulkWriteOptions): Promise<InsertManyResult> {
-    this.checkAlive();
-    undefCheck(docs, "Object Array undefined.");
-    if (!Array.isArray(docs)) throw Error("bodyArray must be an Object Array.");
-    return await this.collection.insertMany(docs, options);
+  public col(): Collection {
+    return this.access();
   }
 
   public isAlive() {
@@ -86,6 +78,10 @@ class MongodbDriver {
     await this.client.close();
     return !(this.alive = false);
   }
+
+  dispose(): Promise<void> {
+    return Promise.resolve(void this.autoClose());
+  }
 }
 
 export async function mongoDbDriverFactory(url: string, alive = true) {
@@ -93,4 +89,3 @@ export async function mongoDbDriverFactory(url: string, alive = true) {
   if (alive) await mongoDriver.initialize();
   return mongoDriver;
 }
-

@@ -27,7 +27,8 @@
   "dependencies": {
     "@jellybeanci/int": "^0.1.0",
     "mongodb": "^4.2.2",
-    "undef-check": "^0.0.3"
+    "undef-check": "^0.0.3",
+    "using-statement": "^0.3.1"
   },
   "devDependencies": {
     "@types/mongodb": "^4.0.7",
