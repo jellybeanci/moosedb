@@ -1,0 +1,34 @@
+{
+  "name": "moosedb",
+  "version": "0.0.3",
+  "description": "Lightweight MongoDb driver.",
+  "main": "index.js",
+  "scripts": {
+    "build": "date +\"%T\" && echo \"Cleaning...\" && rm -rf ./js && echo \"Compiling...\" && tsc && echo \"Done!\" && date +\"%T\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jellybeanci/moosedb.git"
+  },
+  "keywords": [
+    "basic",
+    "lightweight",
+    "mongo",
+    "driver"
+  ],
+  "author": "Goksel KUCUKSAHIN <gokselkucuksahin@gmail.com> (https://github.com/GokselKUCUKSAHIN)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jellybeanci/moosedb/issues"
+  },
+  "homepage": "https://github.com/jellybeanci/moosedb#readme",
+  "dependencies": {
+    "@jellybeanci/int": "^0.1.0",
+    "mongodb": "^4.2.2",
+    "undef-check": "^0.0.3"
+  },
+  "devDependencies": {
+    "@types/mongodb": "^4.0.7"
+  }
+}
