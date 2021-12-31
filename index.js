@@ -53,14 +53,14 @@ class MongodbDriver {
         if (!this.isAlive())
             throw Error("Connection is not alive. Connection dead or never initialized.");
     }
-    async close() {
-        return await this.autoClose();
-    }
     async autoClose() {
         if (!this.isAlive())
             return false;
         await this.client.close();
         return !(this.alive = false);
+    }
+    async close() {
+        return await this.autoClose();
     }
     dispose() {
         return Promise.resolve(void this.autoClose());

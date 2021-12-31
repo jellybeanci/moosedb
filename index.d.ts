@@ -16,8 +16,8 @@ declare class MongodbDriver implements AsyncDisposable {
     col(): Collection;
     isAlive(): boolean;
     private checkAlive;
-    close(): Promise<boolean>;
     private autoClose;
+    close(): Promise<boolean>;
     dispose(): Promise<void>;
 }
 export declare function mongoDbDriverFactory(url: string, alive?: boolean): Promise<MongodbDriver>;
