@@ -79,7 +79,7 @@ class MongodbDriver implements AsyncDisposable {
     return await this.autoClose();
   }
 
-  dispose(): Promise<void> {
+  public dispose(): Promise<void> {
     return Promise.resolve(void this.autoClose());
   }
 }

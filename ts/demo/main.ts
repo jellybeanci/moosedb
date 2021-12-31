@@ -27,7 +27,8 @@ class Main {
       const cursor = driver.col().find();
       await cursor.forEach(console.log);
     }).catch(err => {
-      console.error("Error!", err.message)
+      console.error("Error!", err.message);
+
     });
   }
 
