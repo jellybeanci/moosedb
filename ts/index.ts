@@ -67,16 +67,16 @@ class MongodbDriver implements AsyncDisposable {
     if (!this.isAlive()) throw Error("Connection is not alive. Connection dead or never initialized.");
   }
 
-  public async close(): Promise<boolean> {
-    // console.log("Exit called", this.id);
-    return await this.autoClose();
-  }
-
   private async autoClose(): Promise<boolean> {
     // console.log("ID=", this.id);
     if (!this.isAlive()) return false;
     await this.client.close();
     return !(this.alive = false);
+  }
+
+  public async close(): Promise<boolean> {
+    // console.log("Exit called", this.id);
+    return await this.autoClose();
   }
 
   dispose(): Promise<void> {
