@@ -6,6 +6,7 @@ import {
 import {randomInt} from "@jellybeanci/random";
 import {undefCheck} from "undef-check";
 import {AsyncDisposable} from "using-statement";
+export {using} from "using-statement";
 
 class MongodbDriver implements AsyncDisposable {
   // TODO create documentation

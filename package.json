@@ -27,7 +27,7 @@
   "homepage": "https://github.com/jellybeanci/moosedb#readme",
   "dependencies": {
     "mongodb": "^4.2.2",
-    "undef-check": "^0.0.3",
+    "undef-check": "^0.0.4",
     "@jellybeanci/random": "^0.1.1",
     "using-statement": "^0.3.1"
   }

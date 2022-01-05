@@ -23,13 +23,9 @@ class Main {
   static async findTest(): Promise<void> {
     using(await mongoDbDriverFactory("mongodb://superUser:pass123@10.1.8.88:27017"), async driver => {
       // driver.db("test").get("new-table");
-      driver.close();
       const cursor = driver.col().find();
       await cursor.forEach(console.log);
-    }).catch(err => {
-      console.error("Error!", err.message);
-
-    });
+    })
   }
 
   public static async main(): Promise<void> {
