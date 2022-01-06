@@ -69,14 +69,12 @@ class MongodbDriver implements AsyncDisposable {
   }
 
   private async autoClose(): Promise<boolean> {
-    // console.log("ID=", this.id);
     if (!this.isAlive()) return false;
     await this.client.close();
     return !(this.alive = false);
   }
 
   public async close(): Promise<boolean> {
-    // console.log("Exit called", this.id);
     return await this.autoClose();
   }
 
