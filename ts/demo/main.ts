@@ -5,7 +5,7 @@ const sleep = (ms) => new Promise(v => setTimeout(v, ms));
 
 class Main {
   static async insertOneTest(): Promise<void> {
-    using(await mongoDbDriverFactory("mongodb://superUser:pass123@10.1.8.88:27017"), async (driver) => {
+    using(await mongoDbDriverFactory("mongodb://superUser:pass123@10.1.8.88:27017"), async driver => {
       driver.db("test").get("new-table");
       const response = await driver.col().insertOne({my: 3, file: 4});
       console.log("response:", response);

@@ -3,12 +3,14 @@ import {
   Db,
   Collection
 } from "mongodb";
-import {randomInt} from "@jellybeanci/random";
-import {undefCheck} from "undef-check";
 import {AsyncDisposable} from "using-statement";
+import {undefCheck} from "undef-check";
+import {randomInt} from "@jellybeanci/random";
+import {EventEmitter} from "events";
+
 export {using} from "using-statement";
 
-class MongodbDriver implements AsyncDisposable {
+class MongodbDriver extends EventEmitter implements AsyncDisposable {
   // TODO create documentation
 
   private id: string;
@@ -18,6 +20,7 @@ class MongodbDriver implements AsyncDisposable {
   private collection: Collection;
 
   constructor(uri: string) {
+    super();
     undefCheck(uri, "URI cannot be passed Empty or Undefined.");
     this.client = new MongoClient(uri);
   }
@@ -79,6 +82,7 @@ class MongodbDriver implements AsyncDisposable {
   }
 
   public dispose(): Promise<void> {
+    this.emit("disposed");
     return Promise.resolve(void this.autoClose());
   }
 }
