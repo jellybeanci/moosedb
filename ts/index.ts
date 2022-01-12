@@ -10,6 +10,19 @@ import {EventEmitter} from "events";
 
 export {using} from "using-statement";
 
+/***
+ * <h2>Events</h2>
+ * <ul>
+ *   <li>beforeCreate</li>
+ *   <li>created</li>
+ *   <li>beforeInitialized</li>
+ *   <li>initialized</li>
+ *   <li>beforeClose</li>
+ *   <li>closed</li>
+ *   <li>disposed</li>
+ * </ul>
+ */
+
 class MongodbDriver extends EventEmitter implements AsyncDisposable {
   // TODO create documentation
 
@@ -21,15 +34,19 @@ class MongodbDriver extends EventEmitter implements AsyncDisposable {
 
   constructor(uri: string) {
     super();
+    this.emit("beforeCreate");
     undefCheck(uri, "URI cannot be passed Empty or Undefined.");
     this.client = new MongoClient(uri);
+    this.emit("created");
   }
 
   public async initialize(): Promise<void> {
     if (this.alive) return;
+    this.emit("beforeInitialized");
     await this.client.connect();
     this.alive = true;
     this.id = `id:${randomInt(10_000)}`;
+    this.emit("initialized");
   }
 
   public openDatabase(databaseName: string): MongodbDriver {
@@ -72,8 +89,10 @@ class MongodbDriver extends EventEmitter implements AsyncDisposable {
   }
 
   private async autoClose(): Promise<boolean> {
+    this.emit("beforeClose");
     if (!this.isAlive()) return false;
     await this.client.close();
+    this.emit("closed");
     return !(this.alive = false);
   }
 
