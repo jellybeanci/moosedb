@@ -1,7 +1,6 @@
 import {mongoDbDriverFactory} from "../index";
 import {using} from "using-statement";
-
-const sleep = (ms) => new Promise(v => setTimeout(v, ms));
+import * as fs from "fs";
 
 class Main {
   static async insertOneTest(): Promise<void> {
@@ -28,11 +27,30 @@ class Main {
     })
   }
 
+  static async inseryDataset(): Promise<void> {
+    const data1Str = fs.readFileSync("../../data/data1.json", "utf-8");
+    const data2Str = fs.readFileSync("../../data/data2.json", "utf-8");
+    const data1 = JSON.parse(data1Str);
+    const data2 = JSON.parse(data2Str);
+    const data = [...data1, ...data2];
+    console.log(data);
+    using(await mongoDbDriverFactory("mongodb://superUser:pass123@10.1.8.88:27017"), async driver => {
+      const collection = driver.db("results").get("statistics");
+      const response = await collection.insertMany(data);
+      console.log("operation complete\n", response);
+    });
+  }
+
+  static async sortAndLimit(): Promise<void> {
+    using(await mongoDbDriverFactory("mongodb://superUser:pass123@10.1.8.88:27017"), async driver => {
+      const collection = driver.db("results").get("statistics");
+      const top10 = await collection.find().sort({currency: -1}).limit(10).toArray();
+      console.log(top10);
+    });
+  }
+
   public static async main(): Promise<void> {
-    // await Main.insertOneTest();
-    // await Main.insertManyTest();
-    await Main.findTest();
-    await sleep(5000);
+
   }
 }
 

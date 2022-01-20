@@ -108,5 +108,6 @@ index.js
 index.d.ts
 
 test/
+data/
 
 package-lock.json
