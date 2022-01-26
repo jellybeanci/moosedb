@@ -13,7 +13,6 @@ import {randomInt} from "@jellybeanci/random";
 import {EventEmitter} from "events";
 
 export {using} from "using-statement";
-
 /***
  * <h2>Events</h2>
  * <ul>
