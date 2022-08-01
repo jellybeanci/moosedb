@@ -3,9 +3,9 @@
  * @author {@link https://www.github.com/GokselKUCUKSAHIN|Göksel KÜÇÜKŞAHİN} <gokselkucuksahin@gmail.com>
  */
 import {
-  MongoClient,
-  Db,
-  Collection
+    MongoClient,
+    Db,
+    Collection
 } from "mongodb";
 import {AsyncDisposable} from "using-statement";
 import {undefCheck} from "undef-check";
@@ -13,6 +13,7 @@ import {randomInt} from "@jellybeanci/random";
 import {EventEmitter} from "events";
 
 export {using} from "using-statement";
+
 /***
  * <h2>Events</h2>
  * <ul>
@@ -26,91 +27,95 @@ export {using} from "using-statement";
  * </ul>
  */
 
-class MongodbDriver extends EventEmitter implements AsyncDisposable {
-  // TODO create documentation
+export class MongodbDriver extends EventEmitter implements AsyncDisposable {
+    // TODO create documentation
 
-  private id: string;
-  private alive: boolean = false;
-  private client: MongoClient;
-  private database: Db;
-  private collection: Collection;
+    private id: string;
+    private alive: boolean = false;
+    private client: MongoClient;
+    private database: Db;
+    private collection: Collection;
 
-  constructor(uri: string) {
-    super();
-    this.emit("beforeCreate");
-    undefCheck(uri, "URI cannot be passed Empty or Undefined.");
-    this.client = new MongoClient(uri);
-    this.emit("created");
-  }
+    private constructor(uri: string) {
+        super();
+        this.emit("beforeCreate");
+        undefCheck(uri, "URI cannot be passed Empty or Undefined.");
+        this.client = new MongoClient(uri);
+        this.emit("created");
+    }
 
-  public async initialize(): Promise<void> {
-    if (this.alive) return;
-    this.emit("beforeInitialized");
-    await this.client.connect();
-    this.alive = true;
-    this.id = `id:${randomInt(10_000)}`;
-    this.emit("initialized");
-  }
+    public async initialize(): Promise<void> {
+        if (this.alive) return;
+        this.emit("beforeInitialized");
+        await this.client.connect();
+        this.alive = true;
+        this.id = `id:${randomInt(10_000)}`;
+        this.emit("initialized");
+    }
 
-  public openDatabase(databaseName: string): MongodbDriver {
-    undefCheck(databaseName, "Database Name cannot be passed Empty or Undefined.");
-    this.checkAlive();
-    this.database = this.client.db(databaseName);
-    return this;
-  }
+    public openDatabase(databaseName: string): MongodbDriver {
+        undefCheck(databaseName, "Database Name cannot be passed Empty or Undefined.");
+        this.checkAlive();
+        this.database = this.client.db(databaseName);
+        return this;
+    }
 
-  public db(databaseName: string): MongodbDriver {
-    return this.openDatabase(databaseName);
-  }
+    public db(databaseName: string): MongodbDriver {
+        return this.openDatabase(databaseName);
+    }
 
-  public openConnection(collectionName: string): Collection {
-    undefCheck(collectionName, "Collection Name cannot be passed Empty or Undefined.");
-    this.checkAlive();
-    this.collection = this.database.collection(collectionName);
-    return this.collection;
-  }
+    public openConnection(collectionName: string): Collection {
+        undefCheck(collectionName, "Collection Name cannot be passed Empty or Undefined.");
+        this.checkAlive();
+        this.collection = this.database.collection(collectionName);
+        return this.collection;
+    }
 
-  public get(collectionName: string): Collection {
-    return this.openConnection(collectionName);
-  }
+    public get(collectionName: string): Collection {
+        return this.openConnection(collectionName);
+    }
 
-  public access(): Collection {
-    this.checkAlive();
-    return this.collection;
-  }
+    public access(): Collection {
+        this.checkAlive();
+        return this.collection;
+    }
 
-  public col(): Collection {
-    return this.access();
-  }
+    public col(): Collection {
+        return this.access();
+    }
 
-  public isAlive(): boolean {
-    return this.alive;
-  }
+    public isAlive(): boolean {
+        return this.alive;
+    }
 
-  private checkAlive(): void {
-    if (!this.isAlive()) throw Error("Connection is not alive. Connection dead or never initialized.");
-  }
+    private checkAlive(): void {
+        if (!this.isAlive()) throw Error("Connection is not alive. Connection dead or never initialized.");
+    }
 
-  private async autoClose(): Promise<boolean> {
-    this.emit("beforeClose");
-    if (!this.isAlive()) return false;
-    await this.client.close();
-    this.emit("closed");
-    return !(this.alive = false);
-  }
+    private async autoClose(): Promise<boolean> {
+        this.emit("beforeClose");
+        if (!this.isAlive()) return false;
+        await this.client.close();
+        this.emit("closed");
+        return !(this.alive = false);
+    }
 
-  public async close(): Promise<boolean> {
-    return await this.autoClose();
-  }
+    public async close(): Promise<boolean> {
+        return await this.autoClose();
+    }
 
-  public dispose(): Promise<void> {
-    this.emit("disposed");
-    return Promise.resolve(void this.autoClose());
-  }
+    public dispose(): Promise<void> {
+        this.emit("disposed");
+        return Promise.resolve(void this.autoClose());
+    }
+
+    public static async create(uri: string, alive = true): Promise<MongodbDriver> {
+        const mongoDriver = new MongodbDriver(uri);
+        if (alive) await mongoDriver.initialize();
+        return mongoDriver;
+    }
 }
 
-export async function mongoDbDriverFactory(url: string, alive = true): Promise<MongodbDriver> {
-  const mongoDriver = new MongodbDriver(url);
-  if (alive) await mongoDriver.initialize();
-  return mongoDriver;
+export async function mongoDbDriverFactory(uri: string, alive = true): Promise<MongodbDriver> {
+    return MongodbDriver.create(uri, alive);
 }
