@@ -80,6 +80,11 @@ export class MongodbDriver extends EventEmitter implements AsyncDisposable {
         return this.collection;
     }
 
+    public getDb(): Db{
+        this.checkAlive();
+        return this.database;
+    }
+
     public col(): Collection {
         return this.access();
     }
