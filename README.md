@@ -1,4 +1,4 @@
-# Moosedb the mongoDbDriverFactory
+# Moosedb the mongodb-driver
 
 ## Package Overview
 
